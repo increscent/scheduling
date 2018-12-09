@@ -3,12 +3,15 @@
 #include <string.h>
 #include <sched.h>
 
+#define toUpper(c) (c >= 'a' && c <= 'z')? (c - 'a' + 'A') : (c)
+
 void printStuff(int);
 
 int main(int argc, char** argv)
 {
     long i, j;
-    int sleep = 0, quantum = 0;
+    int sleep = 0, quantum = 0, letter = 0;
+    char lastLetter;
 
     for (i = 1; i < argc; i++)
     {
@@ -16,6 +19,9 @@ int main(int argc, char** argv)
             sleep = 1;
         if (strcmp(argv[i], "-q") == 0)
             quantum = 1;
+        if (strcmp(argv[i], "-l") == 0)
+            letter = 1;
+        lastLetter = argv[i][0];
     }
 
     struct timespec req;
@@ -35,15 +41,24 @@ int main(int argc, char** argv)
         if (i % 100000000 == 0)
         {
             j++;
-            printStuff(j);
+            if (letter)
+            {
+                printf("_%c", toUpper(lastLetter));
+                fflush(stdout);
+            }
+            else
+            {
+                printStuff(j);
+            }
 
             if (sleep)
                 nanosleep(&req, &rem);
         }
     }
 
-    printTux(j);
-    printf("done!\n");
+    if (!letter)
+        printTux(j);
+    printf("done%c!\n", (letter)? toUpper(lastLetter) : '!');
 
     return 0;
 }
