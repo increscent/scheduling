@@ -1,0 +1,41 @@
+NICE
+
+INTRO TO RT
+chrt -- real time status/scheduler
+taskset -- processor affinity
+
+(2 tasks)
+sudo chrt 1 ./spin
+
+FIFO 1
+(3 tasks) // not sharing
+sudo chrt -f 1 taskset 0x01 ./spin
+
+FIFO 2
+(2 tasks) // sharing
+sudo chrt -f 1 taskset 0x01 ./spin -s
+(1 task) // not sharing
+sudo chrt -f 1 taskset 0x01 ./spin
+
+FIFO 3
+// preempting
+sudo chrt -f 1 taskset 0x01 ./spin
+sudo chrt -f 99 taskset 0x01 ./spin
+
+RR
+(2 tasks) // sharing
+sudo chrt -r 1 taskset 0x01 ./spin
+
+RR 2
+(3 tasks) // preempting
+sudo chrt -r 1 taskset 0x01 ./spin
+sudo chrt -r 2 taskset 0x01 ./spin
+sudo chrt -r 3 taskset 0x01 ./spin
+
+RR 3
+Fun with affinity!
+sudo chrt -r 1 taskset 0x01 ./spin
+sudo chrt -r 1 taskset 0x02 ./spin
+sudo chrt -r 1 taskset 0x04 ./spin
+sudo chrt -r 1 taskset 0x08 ./spin
+sudo chrt -r 99 taskset 0x0F ./spin
