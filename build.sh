@@ -1,3 +1,3 @@
 #!/bin/bash
 
-gcc *.c -o $1
+gcc *.c -o $1 -pthread

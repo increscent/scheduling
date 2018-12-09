@@ -41,3 +41,8 @@ sudo chrt -r 1 taskset 0x02 ./spin
 sudo chrt -r 1 taskset 0x04 ./spin
 sudo chrt -r 1 taskset 0x08 ./spin
 sudo chrt -r 99 taskset 0x0F ./spin
+
+PRIORITY INVERSION
+sudo chrt -r 1 taskset 0x01 ./spin -w
+sudo chrt -r 2 taskset 0x01 ./spin
+sudo chrt -r 3 taskset 0x01 ./spin -w
